@@ -1,9 +1,9 @@
 import { Controller, OnInit } from "@flamework/core";
 import inspect from "@rbxts/inspect";
+import Log from "@rbxts/log";
 import Make from "@rbxts/make";
 import { SoundService, TweenService } from "@rbxts/services";
 import SoundSystem from "client/modules/lib/3d-sound-system";
-import Log from "shared/lib/logger";
 
 export const enum SoundType {
     Music = "Music",
@@ -12,7 +12,6 @@ export const enum SoundType {
 
 @Controller({})
 export default class SoundController implements OnInit {
-    private log = new Log();
     private soundGroups = new Map<SoundType, SoundGroup>();
 
     /** @hidden */
@@ -20,7 +19,7 @@ export default class SoundController implements OnInit {
         this.soundGroups.set(SoundType.Music, this.makeSoundGroup(SoundType.Music));
         this.soundGroups.set(SoundType.SoundEffect, this.makeSoundGroup(SoundType.SoundEffect));
 
-        this.log.AtInfo().Log("Setup SoundGroup instances");
+        Log.Info("Setup SoundGroup instances");
     }
 
     private makeSoundGroup(soundType: SoundType): SoundGroup {
@@ -73,7 +72,7 @@ export default class SoundController implements OnInit {
             TweenService.Create(soundObj, tweenInfo, { Volume: desiredVolume }).Play();
         }
 
-        this.log.AtInfo().Log(`Playing sound "${sound}" of type "${soundType}"`);
+        Log.Info(`Playing sound "{Sound}" of type "{SoundType}"`, sound, soundType);
 
         return soundObj;
     }

@@ -1,11 +1,11 @@
 /* eslint-disable max-classes-per-file */
 
 import { Controller, Flamework, OnInit, Reflect } from "@flamework/core";
+import Log from "@rbxts/log";
 import Roact from "@rbxts/roact";
 import RoactRodux, { StoreProvider } from "@rbxts/roact-rodux";
 import { CollectionService, Players } from "@rbxts/services";
 import { ClientStore, IClientStore } from "client/rodux/rodux";
-import Log from "shared/lib/logger";
 import { Scene } from "types/enum/scene";
 import { DecoratorMetadata } from "types/interfaces/flamework";
 import SceneController from "./scene-controller";
@@ -40,8 +40,6 @@ export declare function App(opts: IAppConfig): ClassDecorator;
 /** Handles the loading of classes decorated with App */
 @Controller({})
 export default class AppController implements OnInit {
-    private log = new Log();
-
     private apps = new Map<Constructor, AppInfo>();
     private appHandles = new Map<Constructor, Roact.Tree>();
 
@@ -86,14 +84,14 @@ export default class AppController implements OnInit {
         CollectionService.GetInstanceAddedSignal(tag).Connect((i) => this.onTagAdded(tag, i));
         // CollectionService.GetInstanceRemovedSignal(tag).Connect((i) => this.onTagRemoved(tag, i));
 
-        this.log.AtDebug().Log(`Added connections for tag "${tag}"`);
+        Log.Debug(`Added connections for tag "{Tag}"`, tag);
         this.tagConnections.add(tag);
     }
 
     /** When an instance is added to a tag, we want to find out which apps render onto it. */
     private onTagAdded(tag: string, instance: Instance) {
         if (!instance.IsA("BasePart")) return;
-        this.log.AtDebug().Log(`Instance "${instance.GetFullName()}" added to tag "${tag}"`);
+        Log.Debug(`Instance "{Instance}" added to tag "{Tag}"`, instance.GetFullName(), tag);
 
         for (const [app, { config }] of this.apps) {
             if (config.tag !== tag) continue;
@@ -104,7 +102,7 @@ export default class AppController implements OnInit {
 
     /** Unmount any apps which are connected to a dead instance. */
     // private onTagRemoved(tag: string, instance: Instance) {
-    //     this.log.AtDebug().Log(`Instance "${instance.GetFullName()}" removed from tag "${tag}"`);
+    //     Log.Debug(`Instance "${instance.GetFullName()}" removed from tag "${tag}"`);
     // }
 
     private onSceneChanged(newScene: Scene, oldScene?: Scene) {
@@ -116,11 +114,11 @@ export default class AppController implements OnInit {
 
             if (!usedToBeOpen && openNow) {
                 // This app should be shown again
-                this.log.AtDebug().Log(`SHOWING app "${config.name}"`);
+                Log.Debug(`SHOWING app "{Name}"`, config.name);
                 this.showApp(element);
             } else if (usedToBeOpen && !openNow) {
                 // This app should be hidden
-                this.log.AtDebug().Log(`HIDING app "${config.name}"`);
+                Log.Debug(`HIDING app "{Name}"`, config.name);
                 this.hideApp(element);
             }
         }
@@ -165,12 +163,12 @@ export default class AppController implements OnInit {
         );
 
         this.appHandles.set(element, handle);
-        this.log.AtDebug().Log(`Mounted new app instance "${config.name}"`);
+        Log.Debug(`Mounted new app instance "{Name}"`, config.name);
     }
 
     private hideApp(element: Constructor) {
         const handle = this.appHandles.get(element);
-        if (!handle) return this.log.AtWarning().Log(`No Handle for element ${element}`);
+        if (!handle) return Log.Warn(`No Handle for element {@Element}`, element);
         Roact.unmount(handle);
     }
 }

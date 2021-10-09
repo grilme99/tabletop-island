@@ -1,9 +1,9 @@
 import { Service, OnStart, OnInit, Reflect, Flamework } from "@flamework/core";
 import { Janitor } from "@rbxts/janitor";
+import Log from "@rbxts/log";
 import { Players } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 import PlayerEntity from "server/modules/classes/player-entity";
-import Log from "shared/lib/logger";
 import { isFlameworkService } from "shared/util/flamework-utils";
 import KickCode from "types/enum/kick-reason";
 import PlayerDataService from "./player-data-service";
@@ -25,8 +25,6 @@ export interface PlayerJoin {
  */
 @Service({})
 export class PlayerService implements OnStart, OnInit {
-    private logger = new Log();
-
     private playerJoinEvents = new Map<string, PlayerJoin>();
     private playerEntities = new Map<Player, PlayerEntity>();
     private onEntityRemoving = new Signal();
@@ -40,9 +38,9 @@ export class PlayerService implements OnStart, OnInit {
         // We want to hold the server open until all PlayerEntities are cleaned up
         // and removed.
         game.BindToClose(() => {
-            this.logger.AtDebug().Log("Game closing, holding open until all PlayerEntities clean up");
+            Log.Debug("Game closing, holding open until all PlayerEntities clean up");
             while (this.playerEntities.size() > 0) this.onEntityRemoving.Wait();
-            this.logger.AtDebug().Log("All PlayerEntities cleaned up, closing game");
+            Log.Debug("All PlayerEntities cleaned up, closing game");
         });
     }
 
@@ -68,7 +66,7 @@ export class PlayerService implements OnStart, OnInit {
 
         const janitor = new Janitor();
         janitor.Add(() => {
-            this.logger.AtInfo().Log(`Player ${player} leaving game, cleaning up Janitor`);
+            Log.Info(`Player {@Player} leaving game, cleaning up Janitor`, player);
 
             // We want to add an attribute so systems like ProfileService know that a player is removing
             // when a profile is released.
@@ -113,7 +111,7 @@ export class PlayerService implements OnStart, OnInit {
             const entity = this.getEntity(player);
             if (entity) return fn(entity, ...args);
 
-            this.logger.AtError().Throw().Log(`No entity for player ${player}, cannot continue to callback`);
+            Log.Error(`No entity for player {@Player}, cannot continue to callback`, player);
         };
     }
 }

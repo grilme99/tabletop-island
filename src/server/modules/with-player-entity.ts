@@ -1,10 +1,9 @@
 import { Dependency } from "@flamework/core";
+import Log from "@rbxts/log";
 import { PlayerService } from "server/services/player/player-service";
-import Log from "shared/lib/logger";
 import { IServerResponse } from "types/interfaces/network";
 import PlayerEntity from "./classes/player-entity";
 
-const log = new Log();
 let playerService: PlayerService;
 
 export default function withPlayerEntity<T extends Array<unknown>, R = void>(
@@ -16,8 +15,10 @@ export default function withPlayerEntity<T extends Array<unknown>, R = void>(
         const entity = playerService.getEntity(player);
         if (entity) return fn(entity, ...args);
 
-        log.AtError().Log(
-            `Unable to find entity for player "${player}", unable to call callback. Stacktrace: \n${debug.traceback()}`,
+        Log.Error(
+            `Unable to find entity for player "{@Player}", unable to call callback. Stacktrace: \n{@Stacktrace}`,
+            player,
+            debug.traceback(),
         );
 
         return identity<IServerResponse>({

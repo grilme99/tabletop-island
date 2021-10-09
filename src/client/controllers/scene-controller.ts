@@ -1,13 +1,11 @@
 import { Controller, OnStart } from "@flamework/core";
+import Log from "@rbxts/log";
 import Signal from "@rbxts/signal";
 import { ClientStore } from "client/rodux/rodux";
-import Log from "shared/lib/logger";
 import { Scene } from "types/enum/scene";
 
 @Controller({})
 export default class SceneController implements OnStart {
-    private logger = new Log();
-
     public OnSceneChanged = new Signal<(newScene: Scene, oldScene?: Scene) => void>();
 
     public onStart(): void {
@@ -35,7 +33,7 @@ export default class SceneController implements OnStart {
 
     /** Handles updating  */
     private onSceneChanged(newScene: Scene, oldScene?: Scene) {
-        this.logger.AtDebug().Log("New scene:", newScene);
+        Log.Debug("New scene: {Scene}", newScene);
         this.OnSceneChanged.Fire(newScene, oldScene);
     }
 }

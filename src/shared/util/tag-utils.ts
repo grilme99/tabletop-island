@@ -1,8 +1,6 @@
+import Log from "@rbxts/log";
 import { CollectionService } from "@rbxts/services";
 import { t } from "@rbxts/t";
-import Log from "shared/lib/logger";
-
-const log = new Log();
 
 /**
  * Adds all instances (now and in the future) to the passed set. Also removes
@@ -15,7 +13,7 @@ const log = new Log();
 export function attachSetToTag<T extends Instance>(set: Set<T>, tag: string, instanceGuard: t.check<T>) {
     function handleInstance(obj: Instance) {
         if (!instanceGuard(obj)) {
-            log.AtWarning().Log(`Instance "${obj.GetFullName()}" cannot be added to array.`);
+            Log.Warn(`Instance "{@Instance}" cannot be added to array.`, obj.GetFullName());
             return;
         }
 
