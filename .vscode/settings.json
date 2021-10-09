@@ -1,0 +1,29 @@
+{
+	"[typescript]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+		"editor.formatOnSave": true
+	},
+	"eslint.run": "onType",
+	"eslint.format.enable": true,
+	"typescript.tsdk": "node_modules/typescript/lib",
+	"Lua.diagnostics.globals": [
+		"task",
+		"remodel",
+		"arg"
+	],
+	"Lua.diagnostics.disable": [
+		"incorrect-call-arguments",
+		"missing-module-return"
+	],
+	"Lua.diagnostics.ignore": [
+		"ConnectParallel"
+	],
+	"Lua.runtime.version": "Luau",
+	"robloxLsp.diagnostics.globals": [
+		"remodel"
+	],
+}

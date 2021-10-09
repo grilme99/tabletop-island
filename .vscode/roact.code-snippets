@@ -1,0 +1,52 @@
+{
+    "Roact Component": {
+        "prefix": ["roactcomponent"],
+        "body": [
+            "import Roact from \"@rbxts/roact\";",
+            "",
+            "interface IProps {}",
+            "",
+            "export default function ${0:$TM_FILENAME_BASE}(props: IProps) {",
+            "\treturn <></>;",
+            "}",
+            ""
+        ],
+        "description": "Roact Component"
+    },
+
+    "Roact Story": {
+        "prefix": ["roactstory"],
+        "body": [
+            "import Roact from \"@rbxts/roact\";",
+            "",
+            "export = (target: GuiObject) => {",
+            "\tconst handle = Roact.mount(<></>, target);",
+            "",
+            "\treturn () => Roact.unmount(handle);",
+            "}",
+            ""
+        ],
+        "description": "Roact story for Hoarcekat"
+    },
+
+    "Roact App": {
+        "prefix": ["roactapp"],
+        "body": [
+            "import Roact from \"@rbxts/roact\";",
+            "import { App } from \"client/controllers/app-controller\";",
+            "",
+            "@App({",
+            "\tname: \"${0:$TM_FILENAME_BASE}\",",
+            "\trequiredScenes: [],",
+            "})",
+            "class ${0:$TM_FILENAME_BASE} extends Roact.PureComponent {",
+            "\tpublic render() {",
+            "\t\treturn <></>;",
+            "\t}",
+            "}",
+            "",
+            "export = ${0:$TM_FILENAME_BASE};",
+            ""
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+/node_modules
+/out
+/include
+*.tsbuildinfo
+*.rbxl
+*.rbxlx
+**.lock
+**.build
+.env

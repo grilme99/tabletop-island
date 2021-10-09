@@ -1,0 +1,4 @@
+**/*.lua
+**/*.json
+**/*.git*
+ci-scripts

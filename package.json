@@ -1,0 +1,80 @@
+{
+  "name": "tabletop-games",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run prepare-game && run-in-roblox --place game.rbxlx --script ci-scripts/unit-testing.lua",
+    "prepare-game": "rm -rd out && npm run compile && npm run build",
+    "compile": "rbxts-build compile",
+    "build": "rbxts-build build",
+    "open": "rbxts-build open",
+    "watch": "concurrently \"rbxtsc -w --verbose\" \"rojo serve\"",
+    "start": "rbxts-build start && npm run watch",
+    "sync": "rbxts-build sync",
+    "fix": "npm run fix:eslint && npm run fix:prettier",
+    "fix:eslint": "eslint --fix \"src/**/*.*\"",
+    "fix:prettier": "prettier --write \"src/**/*.*\"",
+    "lint": "npm run lint:eslint && npm run lint:prettier",
+    "lint:eslint": "eslint \"src/**/*.*\"",
+    "lint:prettier": "prettier --check \"src/**/*.*\"",
+    "deploy:staging": "npm run prepare-game && remodel run ci-scripts/deploy-game.lua staging",
+    "deploy:prod": "npm run prepare-game && remodel run ci-scripts/deploy-game.lua production"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@rbxts/compiler-types": "^1.1.1-types.3",
+    "@rbxts/types": "^1.0.534",
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/parser": "^4.26.1",
+    "concurrently": "^6.2.0",
+    "eslint": "^7.28.0",
+    "eslint-config-airbnb-typescript-prettier": "^4.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-roblox-ts": "^0.0.27",
+    "prettier": "^2.3.1",
+    "rbxts-build": "^1.1.2",
+    "rbxts-transformer-flamework": "github:rbxts-flamework/transformer",
+    "roblox-ts": "^1.2.3",
+    "typescript": "^4.3.2"
+  },
+  "rbxts-build": {
+    "rbxtscArgs": [
+      "--verbose"
+    ],
+    "rojoBuildArgs": [
+      "--output",
+      "game.rbxlx"
+    ],
+    "syncLocation": "src/services.d.ts"
+  },
+  "dependencies": {
+    "@flamework/components": "^1.0.0-beta.4",
+    "@flamework/core": "^1.0.0-beta.1",
+    "@flamework/networking": "^1.0.0-beta.5",
+    "@rbxts/cmdr": "^1.8.1-ts.0",
+    "@rbxts/fitumi": "^1.0.9",
+    "@rbxts/flipper": "^2.0.0",
+    "@rbxts/inspect": "^1.0.1",
+    "@rbxts/janitor": "^1.1.3",
+    "@rbxts/maid": "^1.0.0-ts.1",
+    "@rbxts/make": "^1.0.5",
+    "@rbxts/object-utils": "^1.0.4",
+    "@rbxts/profileservice": "^1.3.0",
+    "@rbxts/roact": "^1.4.0-ts.2",
+    "@rbxts/roact-hooks": "^0.2.0-ts.3",
+    "@rbxts/roact-rodux": "^0.2.2-ts.4",
+    "@rbxts/rodux": "^3.0.0-ts.3",
+    "@rbxts/services": "^1.1.5",
+    "@rbxts/signal": "^1.0.3",
+    "@rbxts/string-utils": "^1.0.2",
+    "@rbxts/t": "^2.1.5",
+    "@rbxts/testez": "^0.3.1-ts.6",
+    "@rbxts/yield-for-character": "^1.2.0",
+    "rbxts-transform-debug": "^1.0.0-rc.1",
+    "rbxts-transform-env": "^1.0.0-rc.0"
+  }
+}

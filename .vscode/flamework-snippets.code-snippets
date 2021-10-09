@@ -1,0 +1,57 @@
+{
+    "Flamework Controller": {
+        "prefix": ["controller", "flameworkcontroller"],
+        "description": "Create a Flamework controller",
+        "body": [
+            "import { Controller, OnStart, OnInit } from \"@flamework/core\";",
+            "",
+            "@Controller({})",
+            "export default class ${0:$TM_FILENAME_BASE} implements OnStart, OnInit {",
+            "\t/** @hidden */",
+            "\tpublic onInit(): void {}",
+            "",
+            "\t/** @hidden */",
+            "\tpublic onStart(): void {}",
+            "}",
+            ""
+        ]
+    },
+
+    "Flamework Service": {
+        "prefix": ["service", "flameworkservice"],
+        "description": "Create a Flamework service",
+        "body": [
+            "import { Service, OnStart, OnInit } from \"@flamework/core\";",
+            "",
+            "@Service({})",
+            "export default class ${0:$TM_FILENAME_BASE} implements OnStart, OnInit {",
+            "\t/** @hidden */",
+            "\tpublic onInit(): void {}",
+            "",
+            "\t/** @hidden */",
+            "\tpublic onStart(): void {}",
+            "}",
+            ""
+        ]
+    },
+
+    "Flamework Component": {
+        "prefix": ["component", "flameworkcomponent"],
+        "description": "Create a Flamework component",
+        "body": [
+            "import { Component, BaseComponent } from \"@flamework/components\";",
+            "import { OnStart } from \"@flamework/core\";",
+            "",
+            "interface Attributes {}",
+            "",
+            "@Component({",
+            "\ttag: \"${0:$TM_FILENAME_BASE}\",",
+            "})",
+            "export default class ${0:$TM_FILENAME_BASE} extends BaseComponent<Attributes> implements OnStart {",
+            "\t/** @hidden */",
+            "\tpublic onStart(): void {}",
+            "}",
+            ""
+        ]
+    }
+}

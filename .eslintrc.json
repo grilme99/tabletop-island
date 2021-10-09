@@ -1,0 +1,58 @@
+{
+	"parser": "@typescript-eslint/parser",
+	"parserOptions": {
+		"jsx": true,
+		"useJSXTextNode": true,
+		"ecmaVersion": 2018,
+		"sourceType": "module",
+		"project": "./tsconfig.json"
+	},
+	"plugins": ["@typescript-eslint", "roblox-ts", "prettier"],
+	"extends": [
+		"plugin:@typescript-eslint/recommended",
+		"plugin:roblox-ts/recommended",
+		"plugin:prettier/recommended",
+		"airbnb-typescript-prettier"
+	],
+	"rules": {
+		"roblox-ts/lua-truthiness": "off",
+		"class-methods-use-this": "off",
+		"import/no-unresolved": "off",
+		"no-throw-literal": "off",
+		"no-restricted-globals": "off",
+		"no-useless-constructor": "off",
+		"lines-between-class-members": "off",
+		"@typescript-eslint/no-non-null-assertion": "off",
+		"@typescript-eslint/no-empty-function": "off",
+		"@typescript-eslint/no-empty-interface": "off",
+		"@typescript-eslint/no-unused-vars": "warn",
+		"@typescript-eslint/ban-types": "off",
+		"@typescript-eslint/explicit-module-boundary-types": "off",
+		"@typescript-eslint/no-array-constructor": "off",
+		"@typescript-eslint/no-namespace": "off",
+		"react/jsx-curly-brace-presence": "off",
+		"react/jsx-boolean-value": "off",
+		"react/destructuring-assignment": "off",
+		"import/extensions": "off",
+		"no-plusplus": "off",
+		"react/react-in-jsx-scope": "off",
+		"default-case": "off",
+		"no-restricted-syntax": "off",
+		"no-continue": "off",
+		"consistent-return": "off",
+		"import/prefer-default-export": "off",
+		"no-param-reassign": "off",
+		"prettier/prettier": [
+			"warn",
+			{
+				"semi": true,
+				"trailingComma": "all",
+				"singleQuote": false,
+				"printWidth": 120,
+				"tabWidth": 4,
+				"useTabs": false,
+				"endOfLine": "auto"
+			}
+		]
+	}
+}
