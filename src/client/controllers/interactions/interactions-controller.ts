@@ -26,10 +26,14 @@ export default class InteractionsController implements OnStart, OnInit {
 
             if (config) {
                 if (!Flamework.implements<OnInteracted>(ctor))
-                    return Log.Warn(`Class "{Identifier}" does not implement OnInteracted`, identifier);
+                    return Log.ForScript().Warn(`Class "{Identifier}" does not implement OnInteracted`, identifier);
 
                 this.registeredInteractions.set(ctor, { ctor, config, identifier });
-                Log.Debug(`Registered interaction with tag "{Tag}" ({Identifier})`, config.tag, identifier);
+                Log.ForScript().Verbose(
+                    `Registered interaction with tag "{Tag}" ({Identifier})`,
+                    config.tag,
+                    identifier,
+                );
             }
         }
     }
