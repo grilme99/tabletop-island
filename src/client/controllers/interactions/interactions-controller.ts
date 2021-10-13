@@ -158,15 +158,15 @@ export default class InteractionsController implements OnInit {
     // }
 
     /** Sorts a list of interactions by their angle to the camera */
-    private getClosestInteraction(parts: BasePart[]) {
-        debug.profilebegin("Get_Closest");
-        const cameraCf = camera.CFrame;
-        const closest = parts.sort((a, b) => {
-            const aAngle = getAngleBetween(a.Position, cameraCf);
-            const bAngle = getAngleBetween(b.Position, cameraCf);
-            return aAngle < bAngle;
-        })[0];
-        debug.profileend();
-        return closest;
-    }
+    // private getClosestInteraction(parts: BasePart[]) {
+    //     debug.profilebegin("Get_Closest");
+    //     const cameraCf = camera.CFrame;
+    //     const closest = parts.sort((a, b) => {
+    //         const aAngle = getAngleBetween(a.Position, cameraCf);
+    //         const bAngle = getAngleBetween(b.Position, cameraCf);
+    //         return aAngle < bAngle;
+    //     })[0];
+    //     debug.profileend();
+    //     return closest;
+    // }
 }
