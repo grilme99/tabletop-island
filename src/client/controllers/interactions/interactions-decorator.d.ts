@@ -1,3 +1,4 @@
+import { IClientStore } from "client/rodux/rodux";
 import { ClassDecorator } from "types/interfaces/flamework";
 
 export interface IInteractionConfig {
@@ -8,7 +9,7 @@ export interface IInteractionConfig {
     /** String to show above interaction text. */
     objectText?: string | ((obj: BasePart) => string);
     /** Callback for deciding if the interaction should be shown. */
-    shouldShowInteraction?: (obj: BasePart) => boolean;
+    shouldShowInteraction?: (obj: BasePart, state: IClientStore) => boolean;
 
     keyboardKeyCode?: Enum.KeyCode;
     gamepadKeycode?: Enum.KeyCode;

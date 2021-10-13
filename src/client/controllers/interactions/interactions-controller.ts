@@ -1,11 +1,13 @@
-import { Controller, OnInit, Reflect, Flamework } from "@flamework/core";
+import { Controller, OnInit, Reflect, Flamework, OnStart, OnTick } from "@flamework/core";
 import Log from "@rbxts/log";
 import Make from "@rbxts/make";
 import { t } from "@rbxts/t";
+import { ClientStore } from "client/rodux/rodux";
 import { attachSetToTag } from "shared/util/tag-utils";
 import { CollisionGroup } from "types/enum/collision-groups";
 import { Tag } from "types/enum/tags";
 import { DecoratorMetadata } from "types/interfaces/flamework";
+import CharacterController from "../character-controller";
 import { IInteractionConfig, Interaction, OnInteracted } from "./interactions-decorator";
 
 type Ctor = OnInteracted;
@@ -39,13 +41,15 @@ const maxInteractionDistance = 20;
  * `ProximityPrompt`s for now. In the future this should be updated to a custom UI.
  */
 @Controller({})
-export default class InteractionsController implements OnInit {
+export default class InteractionsController implements OnInit, OnStart, OnTick {
     private log = Log.ForScript();
 
     private registeredInteractions = new Map<string, IInteractionInfo>();
     private interactableInstances = new Set<BasePart>();
 
-    // constructor(private readonly characterController: CharacterController) {}
+    private currentRoduxState = ClientStore.getState();
+
+    constructor(private readonly characterController: CharacterController) {}
 
     /** @hidden */
     public onInit(): void {
@@ -73,6 +77,15 @@ export default class InteractionsController implements OnInit {
         onInteractableAdded.Connect((o) => this.handleInteractable(o));
     }
 
+    /** @hidden */
+    public onStart() {
+        // Unsure of how expensive it is to call GetStore every frame so cache the
+        // current Rodux state in the class.
+        ClientStore.changed.connect((newState) => {
+            this.currentRoduxState = newState;
+        });
+    }
+
     /** Handles creating a `ProximityPrompt` under an interactable part. */
     private handleInteractable(interactable: BasePart) {
         const interactionId = interactable.GetAttribute("InteractionId");
@@ -96,7 +109,6 @@ export default class InteractionsController implements OnInit {
         // Create the proximity prompt and handle connections
         const { config } = interactionInfo;
 
-        // TODO: There might be a cleaner way to do this?
         // eslint-disable-next-line prettier/prettier
         const interactionText = typeIs(config.interactionText, "function") ? config.interactionText(interactable) : config.interactionText;
         const objectText = typeIs(config.objectText, "function") ? config.objectText(interactable) : config.objectText;
@@ -123,38 +135,45 @@ export default class InteractionsController implements OnInit {
         this.log.Verbose("Interactable {@Interactable} found and setup", interactable);
     }
 
-    /** @hidden */
-    // public onTick(): void {
-    //     debug.profilebegin("Interaction_Tick");
+    /**
+     * This could be a dangerous function performance-wise. Loop through all
+     * interactions and if it is in range then check if it should still be visible.
+     * @hidden
+     */
+    public onTick(): void {
+        debug.profilebegin("Interaction_Tick");
 
-    //     // Only run if we have a character
-    //     const character = this.characterController.getCurrentCharacter();
-    //     if (!character) return debug.profileend();
+        // Only run if we have a character
+        const character = this.characterController.getCurrentCharacter();
+        if (!character) return debug.profileend();
 
-    //     // Find all interactable parts around the character
-    //     const currentPosition = character.HumanoidRootPart.Position;
-    //     const interactionParts = Workspace.GetPartBoundsInRadius(
-    //         currentPosition,
-    //         searchRadius,
-    //         overlapParams,
-    //     ) as BasePart[];
+        // Find all interactable parts around the character
+        const currentPosition = character.HumanoidRootPart.Position;
+        for (const interactable of this.interactableInstances) {
+            const prompt = interactable.FindFirstChildOfClass("ProximityPrompt");
+            if (!prompt) continue;
 
-    //     if (interactionParts.size() === 0) return debug.profileend();
+            const distanceFromCharacter = currentPosition.sub(interactable.Position).Magnitude;
+            if (distanceFromCharacter > prompt.MaxActivationDistance) continue;
 
-    //     const closestInteractionPart = this.getClosestInteraction(interactionParts);
-    //     const interactionId = closestInteractionPart.GetAttribute("InteractionId") as string;
-    //     if (!interactionId) return debug.profileend();
+            const interactionId = interactable.GetAttribute("InteractionId");
+            if (!t.string(interactionId)) continue;
+            const interactionInfo = this.registeredInteractions.get(interactionId)!;
+            if (!interactionInfo.config.shouldShowInteraction) continue;
 
-    //     const interactionInfo = this.registeredInteractions.get(interactionId);
-    //     if (!interactionInfo) {
-    //         Log.Warn(`Interactable "{@Interactable}" has no registered interaction class`, closestInteractionPart);
-    //         return debug.profileend();
-    //     }
+            const shouldShow = interactionInfo.config.shouldShowInteraction(interactable, this.currentRoduxState);
+            if (prompt.Enabled !== shouldShow) {
+                this.log.Verbose(
+                    "Interactable {@Interactable} enabled state set to {@Enabled}",
+                    interactable,
+                    shouldShow,
+                );
+                prompt.Enabled = shouldShow;
+            }
+        }
 
-    //     print(interactionId);
-
-    //     debug.profileend();
-    // }
+        debug.profileend();
+    }
 
     /** Sorts a list of interactions by their angle to the camera */
     // private getClosestInteraction(parts: BasePart[]) {
