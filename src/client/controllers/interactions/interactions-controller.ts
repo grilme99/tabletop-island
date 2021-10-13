@@ -1,7 +1,6 @@
 import { Controller, OnInit, Reflect, Flamework } from "@flamework/core";
 import Log from "@rbxts/log";
 import Make from "@rbxts/make";
-import { Workspace } from "@rbxts/services";
 import { t } from "@rbxts/t";
 import { attachSetToTag } from "shared/util/tag-utils";
 import { CollisionGroup } from "types/enum/collision-groups";
@@ -19,7 +18,7 @@ interface IInteractionInfo {
 
 const interactionKey = `flamework:decorators.${Flamework.id<typeof Interaction>()}`;
 
-const camera = Workspace.CurrentCamera!;
+// const camera = Workspace.CurrentCamera!;
 
 const overlapParams = new OverlapParams();
 overlapParams.CollisionGroup = CollisionGroup.Interactable;
@@ -27,11 +26,11 @@ overlapParams.MaxParts = 20;
 
 const maxInteractionDistance = 20;
 
-function getAngleBetween(a: Vector3, b: CFrame) {
-    const vector = a.sub(b.Position).Unit;
-    const angle = math.acos(b.LookVector.Dot(vector));
-    return angle;
-}
+// function getAngleBetween(a: Vector3, b: CFrame) {
+//     const vector = a.sub(b.Position).Unit;
+//     const angle = math.acos(b.LookVector.Dot(vector));
+//     return angle;
+// }
 
 /**
  * Handles the registration of world interactions.
