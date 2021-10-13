@@ -1,5 +1,6 @@
 import Log from "@rbxts/log";
 import { CollectionService } from "@rbxts/services";
+import Signal from "@rbxts/signal";
 import { t } from "@rbxts/t";
 
 /**
@@ -11,6 +12,8 @@ import { t } from "@rbxts/t";
  * @param instanceGuard The guard to check all instances with tag against.
  */
 export function attachSetToTag<T extends Instance>(set: Set<T>, tag: string, instanceGuard: t.check<T>) {
+    const onAdded = new Signal<(obj: T) => void>();
+
     function handleInstance(obj: Instance) {
         if (!instanceGuard(obj)) {
             Log.Warn(`Instance "{@Instance}" cannot be added to array.`, obj.GetFullName());
@@ -18,9 +21,12 @@ export function attachSetToTag<T extends Instance>(set: Set<T>, tag: string, ins
         }
 
         set.add(obj);
+        onAdded.Fire(obj);
     }
 
     CollectionService.GetTagged(tag).forEach(handleInstance);
     CollectionService.GetInstanceAddedSignal(tag).Connect(handleInstance);
     CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => set.delete(instance as T));
+
+    return onAdded;
 }

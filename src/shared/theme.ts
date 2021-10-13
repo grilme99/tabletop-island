@@ -94,7 +94,7 @@ namespace Theme {
     export const Pink800 = ColorUtil.hexColor(0x9d174d);
     export const Pink900 = ColorUtil.hexColor(0x831843);
 
-    export const TextPrimary = Red600;
+    export const TextPrimary = Blue600;
     export const TextSecondary = Gray500;
 
     export const FontPrimary = Enum.Font.GothamBlack;

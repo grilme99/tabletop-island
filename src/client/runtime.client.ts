@@ -7,7 +7,7 @@ Log.SetLogger(
     Logger.configure()
         .SetMinLogLevel(RunService.IsStudio() ? LogLevel.Verbose : LogLevel.Information)
         .EnrichWithProperty("Version", PKG_VERSION)
-        .WriteTo(Log.RobloxOutput())
+        .WriteTo(Log.RobloxOutput({ TagFormat: "full" }))
         .Create(),
 );
 

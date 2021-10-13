@@ -1,12 +1,12 @@
-import { Controller, OnInit, Reflect, Flamework, OnTick } from "@flamework/core";
+import { Controller, OnInit, Reflect, Flamework } from "@flamework/core";
 import Log from "@rbxts/log";
+import Make from "@rbxts/make";
 import { Workspace } from "@rbxts/services";
 import { t } from "@rbxts/t";
 import { attachSetToTag } from "shared/util/tag-utils";
 import { CollisionGroup } from "types/enum/collision-groups";
 import { Tag } from "types/enum/tags";
 import { DecoratorMetadata } from "types/interfaces/flamework";
-import CharacterController from "../character-controller";
 import { IInteractionConfig, Interaction, OnInteracted } from "./interactions-decorator";
 
 type Ctor = OnInteracted;
@@ -25,7 +25,7 @@ const overlapParams = new OverlapParams();
 overlapParams.CollisionGroup = CollisionGroup.Interactable;
 overlapParams.MaxParts = 20;
 
-const searchRadius = 20;
+const maxInteractionDistance = 20;
 
 function getAngleBetween(a: Vector3, b: CFrame) {
     const vector = a.sub(b.Position).Unit;
@@ -33,12 +33,20 @@ function getAngleBetween(a: Vector3, b: CFrame) {
     return angle;
 }
 
+/**
+ * Handles the registration of world interactions.
+ *
+ * TODO: Originally designed for custom interaction UI. Due to time constraints it is using
+ * `ProximityPrompt`s for now. In the future this should be updated to a custom UI.
+ */
 @Controller({})
-export default class InteractionsController implements OnInit, OnTick {
+export default class InteractionsController implements OnInit {
+    private log = Log.ForScript();
+
     private registeredInteractions = new Map<string, IInteractionInfo>();
     private interactableInstances = new Set<BasePart>();
 
-    constructor(private readonly characterController: CharacterController) {}
+    // constructor(private readonly characterController: CharacterController) {}
 
     /** @hidden */
     public onInit(): void {
@@ -57,41 +65,97 @@ export default class InteractionsController implements OnInit, OnTick {
         }
 
         // Grab all instances marked as interactable
-        attachSetToTag(this.interactableInstances, Tag.Interactable, t.instanceIsA("BasePart"));
+        const onInteractableAdded = attachSetToTag(
+            this.interactableInstances,
+            Tag.Interactable,
+            t.instanceIsA("BasePart"),
+        );
+        this.interactableInstances.forEach((o) => this.handleInteractable(o));
+        onInteractableAdded.Connect((o) => this.handleInteractable(o));
     }
 
-    /** @hidden */
-    public onTick(): void {
-        debug.profilebegin("Interaction_Tick");
-
-        // Only run if we have a character
-        const character = this.characterController.getCurrentCharacter();
-        if (!character) return debug.profileend();
-
-        // Find all interactable parts around the character
-        const currentPosition = character.HumanoidRootPart.Position;
-        const interactionParts = Workspace.GetPartBoundsInRadius(
-            currentPosition,
-            searchRadius,
-            overlapParams,
-        ) as BasePart[];
-
-        if (interactionParts.size() === 0) return debug.profileend();
-
-        const closestInteractionPart = this.getClosestInteraction(interactionParts);
-        const interactionId = closestInteractionPart.GetAttribute("InteractionId") as string;
-        if (!interactionId) return debug.profileend();
+    /** Handles creating a `ProximityPrompt` under an interactable part. */
+    private handleInteractable(interactable: BasePart) {
+        const interactionId = interactable.GetAttribute("InteractionId");
+        if (!interactionId || !t.string(interactionId)) {
+            return this.log.Warn(
+                "{@Interactable} missing valid 'InteractionId' attribute (got '{@Attribute}').",
+                interactable,
+                interactionId,
+            );
+        }
 
         const interactionInfo = this.registeredInteractions.get(interactionId);
         if (!interactionInfo) {
-            Log.Warn(`Interactable "{@Interactable}" has no registered interaction class`, closestInteractionPart);
-            return debug.profileend();
+            return this.log.Warn(
+                "{@InteractionId} is not a registered interaction (Interactable '{@Interactable}')",
+                interactionId,
+                interactable,
+            );
         }
 
-        print(interactionId);
+        // Create the proximity prompt and handle connections
+        const { config } = interactionInfo;
 
-        debug.profileend();
+        // TODO: There might be a cleaner way to do this?
+        // eslint-disable-next-line prettier/prettier
+        const interactionText = typeIs(config.interactionText, "function") ? config.interactionText(interactable) : config.interactionText;
+        const objectText = typeIs(config.objectText, "function") ? config.objectText(interactable) : config.objectText;
+
+        const prompt = Make("ProximityPrompt", {
+            Name: `ManagedInteraction_${interactionId}`,
+            Parent: interactable,
+
+            ActionText: interactionText,
+            ObjectText: objectText,
+            UIOffset: config.uiOffset,
+            KeyboardKeyCode: config.keyboardKeyCode,
+            GamepadKeyCode: config.gamepadKeycode,
+            HoldDuration: config.holdDuration ?? 0,
+            MaxActivationDistance: config.maxDistance ?? maxInteractionDistance,
+            RequiresLineOfSight: config.requireLineOfSight ?? false,
+        });
+
+        prompt.Triggered.Connect(() => {
+            this.log.Verbose("Interactable {@Interactable} triggered", interactable);
+            interactionInfo.ctor.onInteracted(interactable);
+        });
+
+        this.log.Verbose("Interactable {@Interactable} found and setup", interactable);
     }
+
+    /** @hidden */
+    // public onTick(): void {
+    //     debug.profilebegin("Interaction_Tick");
+
+    //     // Only run if we have a character
+    //     const character = this.characterController.getCurrentCharacter();
+    //     if (!character) return debug.profileend();
+
+    //     // Find all interactable parts around the character
+    //     const currentPosition = character.HumanoidRootPart.Position;
+    //     const interactionParts = Workspace.GetPartBoundsInRadius(
+    //         currentPosition,
+    //         searchRadius,
+    //         overlapParams,
+    //     ) as BasePart[];
+
+    //     if (interactionParts.size() === 0) return debug.profileend();
+
+    //     const closestInteractionPart = this.getClosestInteraction(interactionParts);
+    //     const interactionId = closestInteractionPart.GetAttribute("InteractionId") as string;
+    //     if (!interactionId) return debug.profileend();
+
+    //     const interactionInfo = this.registeredInteractions.get(interactionId);
+    //     if (!interactionInfo) {
+    //         Log.Warn(`Interactable "{@Interactable}" has no registered interaction class`, closestInteractionPart);
+    //         return debug.profileend();
+    //     }
+
+    //     print(interactionId);
+
+    //     debug.profileend();
+    // }
 
     /** Sorts a list of interactions by their angle to the camera */
     private getClosestInteraction(parts: BasePart[]) {
