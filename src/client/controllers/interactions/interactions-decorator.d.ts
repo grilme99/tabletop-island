@@ -1,8 +1,8 @@
 import { ClassDecorator } from "types/interfaces/flamework";
 
 export interface IInteractionConfig {
-    /** `CollectionService` tag to attach this interaction to. */
-    tag: string;
+    /** `InteractionId` attribute to connect this interaction to. */
+    interactionId: string;
     /** String to show next to interaction keycode. */
     interactionContext: string | ((obj: BasePart) => string);
     /** Callback for deciding if the interaction should be shown. */

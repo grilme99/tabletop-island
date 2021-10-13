@@ -1,1 +1,3 @@
-export const enum Tag {}
+export const enum Tag {
+    Interactable = "Interactable",
+}

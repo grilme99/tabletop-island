@@ -1,6 +1,12 @@
-import { Controller, OnStart, OnInit, Reflect, Flamework } from "@flamework/core";
+import { Controller, OnInit, Reflect, Flamework, OnTick } from "@flamework/core";
 import Log from "@rbxts/log";
+import { Workspace } from "@rbxts/services";
+import { t } from "@rbxts/t";
+import { attachSetToTag } from "shared/util/tag-utils";
+import { CollisionGroup } from "types/enum/collision-groups";
+import { Tag } from "types/enum/tags";
 import { DecoratorMetadata } from "types/interfaces/flamework";
+import CharacterController from "../character-controller";
 import { IInteractionConfig, Interaction, OnInteracted } from "./interactions-decorator";
 
 type Ctor = OnInteracted;
@@ -13,9 +19,26 @@ interface IInteractionInfo {
 
 const interactionKey = `flamework:decorators.${Flamework.id<typeof Interaction>()}`;
 
+const camera = Workspace.CurrentCamera!;
+
+const overlapParams = new OverlapParams();
+overlapParams.CollisionGroup = CollisionGroup.Interactable;
+overlapParams.MaxParts = 20;
+
+const searchRadius = 20;
+
+function getAngleBetween(a: Vector3, b: CFrame) {
+    const vector = a.sub(b.Position).Unit;
+    const angle = math.acos(b.LookVector.Dot(vector));
+    return angle;
+}
+
 @Controller({})
-export default class InteractionsController implements OnStart, OnInit {
-    private registeredInteractions = new Map<Ctor, IInteractionInfo>();
+export default class InteractionsController implements OnInit, OnTick {
+    private registeredInteractions = new Map<string, IInteractionInfo>();
+    private interactableInstances = new Set<BasePart>();
+
+    constructor(private readonly characterController: CharacterController) {}
 
     /** @hidden */
     public onInit(): void {
@@ -28,16 +51,58 @@ export default class InteractionsController implements OnStart, OnInit {
                 if (!Flamework.implements<OnInteracted>(ctor))
                     return Log.ForScript().Warn(`Class "{Identifier}" does not implement OnInteracted`, identifier);
 
-                this.registeredInteractions.set(ctor, { ctor, config, identifier });
-                Log.ForScript().Verbose(
-                    `Registered interaction with tag "{Tag}" ({Identifier})`,
-                    config.tag,
-                    identifier,
-                );
+                this.registeredInteractions.set(config.interactionId, { ctor, config, identifier });
+                Log.Verbose(`Registered interaction with ID "{Id}" ({Identifier})`, config.interactionId, identifier);
             }
         }
+
+        // Grab all instances marked as interactable
+        attachSetToTag(this.interactableInstances, Tag.Interactable, t.instanceIsA("BasePart"));
     }
 
     /** @hidden */
-    public onStart(): void {}
+    public onTick(): void {
+        debug.profilebegin("Interaction_Tick");
+
+        // Only run if we have a character
+        const character = this.characterController.getCurrentCharacter();
+        if (!character) return debug.profileend();
+
+        // Find all interactable parts around the character
+        const currentPosition = character.HumanoidRootPart.Position;
+        const interactionParts = Workspace.GetPartBoundsInRadius(
+            currentPosition,
+            searchRadius,
+            overlapParams,
+        ) as BasePart[];
+
+        if (interactionParts.size() === 0) return debug.profileend();
+
+        const closestInteractionPart = this.getClosestInteraction(interactionParts);
+        const interactionId = closestInteractionPart.GetAttribute("InteractionId") as string;
+        if (!interactionId) return debug.profileend();
+
+        const interactionInfo = this.registeredInteractions.get(interactionId);
+        if (!interactionInfo) {
+            Log.Warn(`Interactable "{@Interactable}" has no registered interaction class`, closestInteractionPart);
+            return debug.profileend();
+        }
+
+        print(interactionId);
+
+        debug.profileend();
+    }
+
+    /** Sorts a list of interactions by their angle to the camera */
+    private getClosestInteraction(parts: BasePart[]) {
+        debug.profilebegin("Get_Closest");
+        const cameraCf = camera.CFrame;
+        const closest = parts.sort((a, b) => {
+            const aAngle = getAngleBetween(a.Position, cameraCf);
+            const bAngle = getAngleBetween(b.Position, cameraCf);
+            return aAngle < bAngle;
+        })[0];
+        debug.profileend();
+        return closest;
+    }
 }

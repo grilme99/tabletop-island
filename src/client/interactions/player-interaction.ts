@@ -7,7 +7,7 @@ const enum IPlayerInteraction {
 }
 
 @Interaction({
-    tag: "PlayerCharacter",
+    interactionId: "PlayerCharacter",
     interactionContext: (obj: BasePart) => {
         const player = Players.GetPlayerFromCharacter(obj.Parent as Instance);
         return player?.DisplayName || obj.Name;
