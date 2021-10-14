@@ -9,7 +9,7 @@ import KickCode from "types/enum/kick-reason";
 import PlayerDataService from "./player-data-service";
 import PlayerRemovalService from "./player-removal-service";
 
-export interface PlayerJoin {
+export interface OnPlayerJoin {
     /**
      * Fires when a player joins the game and is fully initialized. The player
      * is considered "fully initialized" once all of their data is loaded and
@@ -25,7 +25,7 @@ export interface PlayerJoin {
  */
 @Service({})
 export class PlayerService implements OnStart, OnInit {
-    private playerJoinEvents = new Map<string, PlayerJoin>();
+    private playerJoinEvents = new Map<string, OnPlayerJoin>();
     private playerEntities = new Map<Player, PlayerEntity>();
     private onEntityRemoving = new Signal();
 
@@ -49,7 +49,7 @@ export class PlayerService implements OnStart, OnInit {
         for (const [obj, id] of Reflect.objToId) {
             if (!isFlameworkService(obj)) continue;
             const dependency = Flamework.resolveDependency(id);
-            if (Flamework.implements<PlayerJoin>(dependency)) {
+            if (Flamework.implements<OnPlayerJoin>(dependency)) {
                 this.playerJoinEvents.set(id, dependency);
             }
         }
