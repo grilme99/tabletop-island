@@ -5,6 +5,7 @@ import { Events } from "server/events";
 import PlayerEntity from "server/modules/classes/player-entity";
 import { addToCollisionGroup } from "shared/util/physics-utils";
 import { CollisionGroup } from "types/enum/collision-groups";
+import { Tag } from "types/enum/tags";
 import { ICharacterAngle } from "types/interfaces/character";
 import { OnPlayerJoin } from "./player/player-service";
 
@@ -12,6 +13,16 @@ const characterAnglesReplicationRate = 0.5;
 
 PhysicsService.CreateCollisionGroup(CollisionGroup.Character);
 
+/**
+ * Much of the logic here is taken from MaximumADHD's CharacterRealism system.
+ * https://github.com/MaximumADHD/Character-Realism/blob/main/RealismClient/init.client.lua
+ *
+ * I have made some optimizations here, such as replicating a buffer of character angles from the server
+ * once, rather than one event per character. The original implementation could allow an exploiter to
+ * fire a huge amount of events to each client.
+ *
+ * TODO: Actually complete character look at stuff
+ */
 @Service({})
 export default class CharacterService implements OnPlayerJoin, OnStart {
     private characterAnglesBuffer = new Map<Player, ICharacterAngle>();
@@ -33,9 +44,15 @@ export default class CharacterService implements OnPlayerJoin, OnStart {
         player.CharacterAdded.Connect((c) => this.characterAdded(c));
     }
 
-    private characterAdded(character: Model) {
-        CollectionService.AddTag(character, "PlayerCharacter");
-        yieldForR15CharacterDescendants(character).then((c) => addToCollisionGroup(c, CollisionGroup.Character));
+    private async characterAdded(_c: Model) {
+        const character = await yieldForR15CharacterDescendants(_c);
+        addToCollisionGroup(character, CollisionGroup.Character);
+        CollectionService.AddTag(character, Tag.PlayerCharacter);
+
+        // const neck = character.Head.Neck;
+        // neck.SetAttribute("OriginalC0", neck.C0);
+        // const waist = character.UpperTorso.Waist;
+        // waist.SetAttribute("OriginalC0", waist.C0);
     }
 
     private onPlayerSetCharacterAngles(player: Player, pitch: number, yaw: number) {

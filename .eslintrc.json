@@ -42,6 +42,7 @@
 		"consistent-return": "off",
 		"import/prefer-default-export": "off",
 		"no-param-reassign": "off",
+		"one-var": "off",
 		"prettier/prettier": [
 			"warn",
 			{

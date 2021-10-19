@@ -4,6 +4,16 @@ import yieldForR15CharacterDescendants, { CharacterRigR15 } from "@rbxts/yield-f
 
 const player = Players.LocalPlayer;
 
+/**
+ * Much of the logic here is taken from MaximumADHD's CharacterRealism system.
+ * https://github.com/MaximumADHD/Character-Realism/blob/main/RealismClient/init.client.lua
+ *
+ * I have made some optimizations here, such as replicating a buffer of character angles from the server
+ * once, rather than one event per character. The original implementation could allow an exploiter to
+ * fire a huge amount of events to each client.
+ *
+ * TODO: Actually complete character look at stuff
+ */
 @Controller({})
 export default class CharacterController implements OnInit {
     private currentCharacter?: CharacterRigR15;
