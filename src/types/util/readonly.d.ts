@@ -1,6 +1,6 @@
 export type DeepReadonly<T> = T extends (infer R)[]
     ? DeepReadonlyArray<R>
-    : T extends Function
+    : T extends Callback
     ? T
     : T extends object
     ? DeepReadonlyObject<T>
