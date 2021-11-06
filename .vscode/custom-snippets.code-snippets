@@ -1,0 +1,27 @@
+{
+    "App": {
+        "prefix": ["app"],
+        "description": "Create an app",
+        "body": [
+            "import Roact from \"@rbxts/roact\";",
+            "import { App } from \"client/controllers/app-controller\";",
+            "import { Scene } from \"types/enum/scene\";",
+            "",
+            "interface IProps {}",
+            "",
+            "@App({",
+            "    name: \"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}\",",
+            "    requiredScenes: [Scene.World],",
+            "    ignoreGuiInset: true,",
+            "})",
+            "class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} extends Roact.PureComponent<IProps> {",
+            "    public render() {",
+            "        return <></>;",
+            "    }",
+            "}",
+            "",
+            "export = ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g};",
+            ""
+        ]
+    }
+}
