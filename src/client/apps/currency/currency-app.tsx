@@ -5,14 +5,14 @@ import { Scene } from "types/enum/scene";
 interface IProps {}
 
 @App({
-    name: "HudApp",
+    name: "CurrencyApp",
     requiredScenes: [Scene.World],
     ignoreGuiInset: true,
 })
-class HudApp extends Roact.PureComponent<IProps> {
+class CurrencyApp extends Roact.PureComponent<IProps> {
     public render() {
         return <></>;
     }
 }
 
-export = HudApp;
+export = CurrencyApp;

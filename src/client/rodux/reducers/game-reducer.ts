@@ -7,7 +7,7 @@ export interface IGameReducer {
 }
 
 const InitialState: IGameReducer = {
-    openScene: Scene.Game,
+    openScene: Scene.World,
 };
 
 export type GameActions = ActionSetScene;

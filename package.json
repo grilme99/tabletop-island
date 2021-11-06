@@ -37,9 +37,9 @@
     "eslint-plugin-roblox-ts": "^0.0.27",
     "prettier": "^2.3.1",
     "rbxts-build": "^1.1.2",
-    "rbxts-transformer-flamework": "github:rbxts-flamework/transformer",
-    "roblox-ts": "^1.2.3",
-    "typescript": "^4.3.2"
+    "rbxts-transformer-flamework": "^1.0.0-beta.8",
+    "roblox-ts": "^1.2.7",
+    "typescript": "^4.3.5"
   },
   "rbxts-build": {
     "rbxtscArgs": [
@@ -52,9 +52,9 @@
     "syncLocation": "src/services.d.ts"
   },
   "dependencies": {
-    "@flamework/components": "^1.0.0-beta.4",
-    "@flamework/core": "^1.0.0-beta.1",
-    "@flamework/networking": "^1.0.0-beta.5",
+    "@flamework/components": "^1.0.0-beta.5",
+    "@flamework/core": "^1.0.0-beta.2",
+    "@flamework/networking": "^1.0.0-beta.6",
     "@rbxts/cmdr": "^1.8.1-ts.0",
     "@rbxts/fitumi": "^1.0.9",
     "@rbxts/flipper": "^2.0.0",
