@@ -39,7 +39,7 @@ export default class CharacterService implements OnPlayerJoin, OnStart {
 
     /** @hidden */
     public onPlayerJoin(entity: PlayerEntity): void {
-        const player = entity.instance;
+        const { player } = entity;
         if (player.Character) this.characterAdded(player.Character);
         player.CharacterAdded.Connect((c) => this.characterAdded(c));
     }
