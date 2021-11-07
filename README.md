@@ -1,6 +1,6 @@
-# Tabletop Games
+# Tabletop Mania
 
-Tabletop Games is a highly-social (and open-source!) game meet new people and play against friends new and old.
+Tabletop Mania is a highly-social (and open-source!) game meet new people and play against friends new and old.
 
 ## Contributing
 

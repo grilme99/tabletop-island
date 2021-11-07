@@ -1,6 +1,10 @@
 import { Profile } from "@rbxts/profileservice/globals";
 
-const DefaultPlayerData = {};
+const DefaultPlayerData = {
+    currency: {
+        gamePoints: 0,
+    },
+};
 
 export default DefaultPlayerData;
 
