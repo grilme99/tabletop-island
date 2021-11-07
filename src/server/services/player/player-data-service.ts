@@ -1,5 +1,4 @@
 import { Dependency, Service } from "@flamework/core";
-import { Janitor } from "@rbxts/janitor";
 import ProfileService from "@rbxts/profileservice";
 import { Players } from "@rbxts/services";
 import DefaultPlayerData, { IPlayerData, PlayerDataProfile } from "shared/data/default-player-data";

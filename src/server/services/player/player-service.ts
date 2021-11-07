@@ -3,9 +3,12 @@ import { Janitor } from "@rbxts/janitor";
 import Log from "@rbxts/log";
 import { Players } from "@rbxts/services";
 import Signal from "@rbxts/signal";
+import { Functions } from "server/events";
 import PlayerEntity from "server/modules/classes/player-entity";
+import { IPlayerData } from "shared/data/default-player-data";
 import { isFlameworkService } from "shared/util/flamework-utils";
 import KickCode from "types/enum/kick-reason";
+import { IServerResponse } from "types/interfaces/network";
 import PlayerDataService from "./player-data-service";
 import PlayerRemovalService from "./player-removal-service";
 
@@ -45,6 +48,8 @@ export class PlayerService implements OnStart, OnInit {
     }
 
     public onStart(): void {
+        Functions.requestPlayerData.setCallback((p) => this.onPlayerRequestedData(p));
+
         // Find all services which implement PlayerJoin and save them for later
         for (const [obj, id] of Reflect.objToId) {
             if (!isFlameworkService(obj)) continue;
@@ -53,6 +58,22 @@ export class PlayerService implements OnStart, OnInit {
                 this.playerJoinEvents.set(id, dependency);
             }
         }
+    }
+
+    /**
+     * Called by the client to request their initial player data.
+     *
+     * TODO: Retry if their profile hasn't loaded yet, this will error if player data
+     * is requested too early.
+     */
+    private async onPlayerRequestedData(player: Player): Promise<IServerResponse<IPlayerData>> {
+        const entity = this.getEntity(player);
+        if (!entity) return { success: false, error: "No player entity" };
+
+        return {
+            success: true,
+            data: entity.data,
+        };
     }
 
     private async onPlayerJoin(player: Player) {

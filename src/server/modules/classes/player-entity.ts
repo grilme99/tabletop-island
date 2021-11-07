@@ -1,5 +1,6 @@
 import { Janitor } from "@rbxts/janitor";
 import Log from "@rbxts/log";
+import { Events } from "server/events";
 import { IPlayerData, PlayerDataProfile } from "shared/data/default-player-data";
 import { DeepReadonly } from "types/util/readonly";
 
@@ -28,8 +29,6 @@ export default class PlayerEntity {
 
     /**
      * Method used to update the players data and alert the client of data changes.
-     * TODO: Alert the client of data changes.
-     *
      * @param callback Callback that gets passed the players existing data and returns
      * their new data.
      */
@@ -39,6 +38,8 @@ export default class PlayerEntity {
         this.dataProfile.Data = newData;
         this.data = newData;
 
+        // TODO: Only send changed keys
+        Events.playerDataChanged(this.player, newData);
         Log.Debug("Player data for {Player} updated to {@Data}", this.player, newData);
     }
 }
