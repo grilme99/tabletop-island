@@ -2,7 +2,7 @@ import { Controller, OnStart } from "@flamework/core";
 import Log from "@rbxts/log";
 import { Events, Functions } from "client/events";
 import { ClientStore } from "client/rodux/rodux";
-import { IPlayerData } from "shared/data/default-player-data";
+import { IPlayerData } from "shared/meta/default-player-data";
 
 /**
  * Controller than handles receiving player data updates from the server. Also

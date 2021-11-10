@@ -5,7 +5,7 @@ import { Players } from "@rbxts/services";
 import Signal from "@rbxts/signal";
 import { Functions } from "server/events";
 import PlayerEntity from "server/modules/classes/player-entity";
-import { IPlayerData } from "shared/data/default-player-data";
+import { IPlayerData } from "shared/meta/default-player-data";
 import { isFlameworkService } from "shared/util/flamework-utils";
 import KickCode from "types/enum/kick-reason";
 import { IServerResponse } from "types/interfaces/network";

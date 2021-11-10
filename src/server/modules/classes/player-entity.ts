@@ -1,7 +1,7 @@
 import { Janitor } from "@rbxts/janitor";
 import Log from "@rbxts/log";
 import { Events } from "server/events";
-import { IPlayerData, PlayerDataProfile } from "shared/data/default-player-data";
+import { IPlayerData, PlayerDataProfile } from "shared/meta/default-player-data";
 import { DeepReadonly } from "types/util/readonly";
 
 export default class PlayerEntity {

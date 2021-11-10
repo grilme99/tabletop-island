@@ -1,6 +1,6 @@
 import { Networking } from "@flamework/networking";
 import { IServerResponse } from "types/interfaces/network";
-import { IPlayerData } from "./data/default-player-data";
+import { IPlayerData } from "./meta/default-player-data";
 
 // These events are listened to on the server, and called by the client.
 interface ServerFunctions {
