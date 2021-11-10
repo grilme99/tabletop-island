@@ -23,5 +23,21 @@
             "export = ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g};",
             ""
         ]
+    },
+    "Interaction": {
+        "prefix": ["interaction"],
+        "description": "Create an interaction",
+        "body": [
+            "import { Interaction, OnInteracted } from \"client/controllers/interactions/interactions-decorator\";",
+            "",
+            "@Interaction({",
+            "    interactionId: \"${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}\",",
+            "    interactionText: \"Some Interaction\",",
+            "})",
+            "export class ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} implements OnInteracted {",
+            "    public onInteracted(obj: BasePart) {}",
+            "}",
+            ""
+        ]
     }
 }
