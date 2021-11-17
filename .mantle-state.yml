@@ -1,0 +1,146 @@
+---
+deployments:
+  production:
+    - resourceType: experience
+      id: singleton
+      inputs:
+        assetId:
+          value: ~
+      outputs:
+        assetId: 3095130867
+        startPlaceId: 8024855904
+    - resourceType: experienceActivation
+      id: singleton
+      inputs:
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+        isActive:
+          value: true
+      outputs: ~
+    - resourceType: experienceConfiguration
+      id: singleton
+      inputs:
+        configuration:
+          value:
+            genre: All
+            playableDevices:
+              - computer
+              - phone
+              - tablet
+            isFriendsOnly: false
+            allowPrivateServers: true
+            privateServerPrice: 0
+            isForSale: ~
+            price: ~
+            studioAccessToApisAllowed: true
+            permissions: ~
+            universeAvatarType: ~
+            universeAnimationType: ~
+            universeCollisionType: ~
+            isArchived: ~
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+      outputs: ~
+    - resourceType: experienceIcon
+      id: assets/marketing/icon/temp-icon.png
+      inputs:
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+        fileHash:
+          value: de29fd9226e905a102e42260e6b064461367bbab02582782f473e84bd4c79d39
+        filePath:
+          value: assets/marketing/icon/temp-icon.png
+        startPlaceId:
+          ref:
+            - experience
+            - singleton
+            - startPlaceId
+      outputs:
+        assetId: 34770395
+    - resourceType: experienceThumbnail
+      id: assets/marketing/thumbnail/temp-thumbnail.png
+      inputs:
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+        fileHash:
+          value: ae3dd98b4d5bc8f3ecb771c3bd8c01c4cb6b5aa6762cbf8eadffcd05f1ce6772
+        filePath:
+          value: assets/marketing/thumbnail/temp-thumbnail.png
+      outputs:
+        assetId: 50712543
+    - resourceType: experienceThumbnailOrder
+      id: singleton
+      inputs:
+        assetIds:
+          refList:
+            - - experienceThumbnail
+              - assets/marketing/thumbnail/temp-thumbnail.png
+              - assetId
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+      outputs: ~
+    - resourceType: place
+      id: start
+      inputs:
+        assetId:
+          value: ~
+        experienceId:
+          ref:
+            - experience
+            - singleton
+            - assetId
+        isStart:
+          value: true
+        startPlaceId:
+          ref:
+            - experience
+            - singleton
+            - startPlaceId
+      outputs:
+        assetId: 8024855904
+    - resourceType: placeConfiguration
+      id: start
+      inputs:
+        assetId:
+          ref:
+            - place
+            - start
+            - assetId
+        configuration:
+          value:
+            name: Tabletop Island!
+            description: An open-source and highly-social Roblox game for playing various tabletop games!
+            maxPlayerCount: 30
+            allowCopying: ~
+            socialSlotType: Automatic
+            customSocialSlotCount: ~
+      outputs: ~
+    - resourceType: placeFile
+      id: start
+      inputs:
+        assetId:
+          ref:
+            - place
+            - start
+            - assetId
+        fileHash:
+          value: 21bdad7cd04a1c17bf3bf2832cd0657c9c384240509e3953fe960992e3120908
+        filePath:
+          value: game.rbxlx
+      outputs:
+        version: 2
