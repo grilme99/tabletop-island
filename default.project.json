@@ -1,5 +1,5 @@
 {
-	"name": "Tabletop Mania",
+	"name": "Tabletop Island",
 	"globIgnorePaths": [
 		"**/package.json",
 		"**/tsconfig.json"

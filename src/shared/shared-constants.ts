@@ -1,1 +1,1 @@
-export const GAME_NAME = "Tabletop Mania";
+export const GAME_NAME = "Tabletop Island";
