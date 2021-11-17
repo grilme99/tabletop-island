@@ -7,10 +7,10 @@ import { IMinigameMeta } from "types/interfaces/minigame-types";
 function getMinigameMeta(obj: BasePart): IMinigameMeta | undefined {
     const minigameId = obj.GetAttribute("MinigameId");
     if (!typeIs(minigameId, "string"))
-        return Log.Warn("Minigame interaction {@Interaction} has no MinigameId attribute") as undefined;
+        return Log.Warn("Minigame interaction {@Interaction} has no MinigameId attribute", obj) as never;
 
     const meta = MinigameMeta.get(minigameId);
-    if (!meta) return Log.Warn("Minigame interaction {@Interaction} has invalid MinigameId attribute") as undefined;
+    if (!meta) return Log.Warn("Minigame interaction {@Interaction} has invalid MinigameId attribute", obj) as never;
 
     return meta;
 }
