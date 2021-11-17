@@ -13,4 +13,8 @@ export const StoreReducer = Rodux.combineReducers<IClientStore, StoreActions>({
     playerData: dataReducer,
 });
 
-export const ClientStore = new Rodux.Store<IClientStore, StoreActions>(StoreReducer, {});
+// This bypasses some type checks by using `never` but the Rodux package is really weird and fiddly.
+// Should be fine, can revisit later.
+export const ClientStore = new Rodux.Store<IClientStore, StoreActions>(StoreReducer, {}, [
+    Rodux.thunkMiddleware,
+] as never);
