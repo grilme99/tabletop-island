@@ -62,29 +62,31 @@
 			"$properties": {
 				"Technology": "ShadowMap",
 				"Ambient": [
-					0.75,
-					0.80,
-					0.90
+					0.458824,
+					0.545098,
+					0.639216
 				],
 				"ColorShift_Bottom": [
-					0.80,
-					0.67,
-					0.79
+					0.898039,
+					0.921569,
+					0.627451
 				],
 				"ColorShift_Top": [
-					1,
-					1,
-					0.80
+					0.960784,
+					0.811765,
+					0.678431
 				],
 				"OutdoorAmbient": [
-					1,
-					1,
+					0.870588,
+					0.952941,
 					1
 				],
-				"Brightness": 1.6,
-				"EnvironmentDiffuseScale": 1,
+				"Brightness": 2.5,
+				"GlobalShadows": true,
+				"EnvironmentDiffuseScale": 0.8,
 				"EnvironmentSpecularScale": 1,
-				"ClockTime": 10
+				"ClockTime": 14,
+				"GeographicLatitude": 41.733
 			}
 		}
 	}
