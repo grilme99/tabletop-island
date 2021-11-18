@@ -3,12 +3,18 @@
         "prefix": ["roactcomponent"],
         "body": [
             "import Roact from \"@rbxts/roact\";",
+            "import Hooks from \"@rbxts/roact-hooks\";",
             "",
             "interface IProps {}",
             "",
-            "export default function ${0:$TM_FILENAME_BASE}(props: IProps) {",
-            "\treturn <></>;",
-            "}",
+            "const Inner${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}: Hooks.FC<IProps> = (props) => {",
+            "    return <></>;",
+            "};",
+            "",
+            "export const ${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g} = new Hooks(Roact)(Inner${TM_FILENAME_BASE/(.*)/${1:/pascalcase}/g}, {",
+            "    componentType: \"PureComponent\",",
+            "    defaultProps: {},",
+            "});",
             ""
         ],
         "description": "Roact Component"
@@ -27,26 +33,5 @@
             ""
         ],
         "description": "Roact story for Hoarcekat"
-    },
-
-    "Roact App": {
-        "prefix": ["roactapp"],
-        "body": [
-            "import Roact from \"@rbxts/roact\";",
-            "import { App } from \"client/controllers/app-controller\";",
-            "",
-            "@App({",
-            "\tname: \"${0:$TM_FILENAME_BASE}\",",
-            "\trequiredScenes: [],",
-            "})",
-            "class ${0:$TM_FILENAME_BASE} extends Roact.PureComponent {",
-            "\tpublic render() {",
-            "\t\treturn <></>;",
-            "\t}",
-            "}",
-            "",
-            "export = ${0:$TM_FILENAME_BASE};",
-            ""
-        ]
     }
 }
