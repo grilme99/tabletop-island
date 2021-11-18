@@ -4,8 +4,9 @@ import { Controller, Flamework, OnInit, Reflect } from "@flamework/core";
 import Log from "@rbxts/log";
 import Roact from "@rbxts/roact";
 import RoactRodux, { StoreProvider } from "@rbxts/roact-rodux";
+import Rodux from "@rbxts/rodux";
 import { CollectionService, Players } from "@rbxts/services";
-import { ClientStore, IClientStore } from "client/rodux/rodux";
+import { ClientStore, IClientStore, StoreActions } from "client/rodux/rodux";
 import { Scene } from "types/enum/scene";
 import { DecoratorMetadata } from "types/interfaces/flamework";
 import SceneController from "./scene-controller";
@@ -13,6 +14,10 @@ import SceneController from "./scene-controller";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ClassDecorator = (ctor: any) => any;
 type Constructor<T = Roact.Component> = new (...args: never[]) => T;
+
+const noop = () => {};
+
+export type StoreDispatch = Rodux.Dispatch<StoreActions>;
 
 export interface IAppConfig {
     /** Debug name for app. */
@@ -27,6 +32,7 @@ export interface IAppConfig {
     ignoreGuiInset?: boolean;
     /** If this is specified then the root component will be connected to Rodux. */
     mapStateToProps?: (state: IClientStore) => unknown;
+    mapDispatchToProps?: (dispatch: StoreDispatch) => unknown;
 }
 
 interface AppInfo {
@@ -128,8 +134,14 @@ export default class AppController implements OnInit {
         const { config } = this.apps.get(element)!;
 
         let component = element as unknown as Roact.FunctionComponent;
-        if (config.mapStateToProps) {
-            component = RoactRodux.connect((state: IClientStore) => config.mapStateToProps!(state))(component);
+        if (config.mapStateToProps || config.mapDispatchToProps) {
+            const mapStateToProps = config.mapStateToProps || noop;
+            const mapDispatchToProps = config.mapDispatchToProps || noop;
+
+            component = RoactRodux.connect(
+                (state: IClientStore) => mapStateToProps(state),
+                (dispatch: StoreDispatch) => mapDispatchToProps(dispatch),
+            )(component);
         }
 
         const content = <StoreProvider store={ClientStore}>{Roact.createElement(component)}</StoreProvider>;

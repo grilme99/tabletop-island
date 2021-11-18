@@ -14,12 +14,19 @@ export interface IGameReducer {
     };
 }
 
+const items: IHotbarItemInStore[] = new Array(9, "").map((_, i) => {
+    return {
+        id: tostring(i),
+        imageId: "1235453245",
+    };
+});
+
 const InitialState: IGameReducer = {
     openScene: Scene.World,
 
     hotbar: {
-        selectedItem: undefined,
-        items: [],
+        selectedItem: items[2].id,
+        items,
     },
 };
 
@@ -43,7 +50,7 @@ export const gameReducer = Rodux.createReducer<IGameReducer, GameActions>(Initia
         }
 
         return Llama.Dictionary.mergeDeep(state, {
-            hotbarItems: {
+            hotbar: {
                 items: hotbarItems,
             },
         });
@@ -53,14 +60,14 @@ export const gameReducer = Rodux.createReducer<IGameReducer, GameActions>(Initia
         hotbarItems.remove(hotbarItems.findIndex((i) => i.id === itemId));
 
         return Llama.Dictionary.mergeDeep(state, {
-            hotbarItems: {
+            hotbar: {
                 items: hotbarItems,
             },
         });
     },
     DO_NOT_USE_SelectHotbarItem: (state, { itemId }) => {
         return Llama.Dictionary.mergeDeep(state, {
-            hotbarItems: {
+            hotbar: {
                 selectedItem: itemId,
             },
         });
