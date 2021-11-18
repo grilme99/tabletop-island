@@ -22,7 +22,7 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
     useEffect(() => {
         transitionMotor.setGoal(
             new Spring(selected ? 1 : 0, {
-                frequency: 4.5,
+                frequency: 5,
                 dampingRatio: 0.625,
             }),
         );
