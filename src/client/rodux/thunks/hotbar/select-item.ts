@@ -1,3 +1,4 @@
+import Roact from "@rbxts/roact";
 import { ClientStore } from "client/rodux/rodux";
 
 /**
@@ -10,7 +11,12 @@ import { ClientStore } from "client/rodux/rodux";
  */
 export function hotbarSelectItem(itemId: string | undefined) {
     return (store: typeof ClientStore) => {
+        const currentState = store.getState();
+
+        const itemAlreadySelected = currentState.gameState.hotbar.selectedItem === itemId;
+        const finalItemId = itemAlreadySelected ? Roact.None : itemId;
+
         // Reflect this update on UI with the internal action.
-        store.dispatch({ type: "DO_NOT_USE_SelectHotbarItem", itemId });
+        store.dispatch({ type: "DO_NOT_USE_SelectHotbarItem", itemId: finalItemId });
     };
 }
