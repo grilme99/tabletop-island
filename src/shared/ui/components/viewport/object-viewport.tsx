@@ -44,7 +44,6 @@ const InnerObjectViewport: Hooks.FC<IProps> = (props, hooks) => {
         model.Parent = viewport;
 
         const viewportCamera = new Instance("Camera");
-        // viewportCamera.FieldOfView = 50;
         viewport.CurrentCamera = viewportCamera;
         setDefaultCameraView(viewportCamera, model, props.extraCameraDepth);
         viewportCamera.Parent = viewport;
