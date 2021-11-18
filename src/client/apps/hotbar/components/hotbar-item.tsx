@@ -12,6 +12,8 @@ interface IProps {
     onSelected: Callback;
 }
 
+const inputAreaScale = 1.4;
+
 const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }, hooks) => {
     const { useEffect, useValue } = hooks;
 
@@ -36,18 +38,26 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
             />
 
             {/* Inner frame that we can freely move around without influence from the UIListLayout */}
-            <imagebutton
+            <frame
                 Position={transitionRatio.map((ratio) => UDim2.fromOffset(0, 0).Lerp(UDim2.fromOffset(0, -10), ratio))}
                 Size={UDim2.fromScale(1, 1)}
                 BorderSizePixel={0}
                 BackgroundColor3={Theme.white}
                 BorderColor3={new Color3(1, 1, 1)}
-                AutoButtonColor={false}
-                Event={{
-                    Activated: () => onSelected(),
-                }}
             >
                 <uicorner CornerRadius={new UDim(1, 0)} />
+
+                {/* Input area that goes past the visual UI */}
+                <imagebutton
+                    AnchorPoint={new Vector2(0.5, 0.5)}
+                    Position={UDim2.fromScale(0.5, 0.5)}
+                    Size={UDim2.fromScale(inputAreaScale, inputAreaScale)}
+                    BackgroundTransparency={1}
+                    ZIndex={2}
+                    Event={{
+                        Activated: () => onSelected(),
+                    }}
+                />
 
                 {/* Selected ring */}
                 <uistroke
@@ -70,7 +80,7 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
                 >
                     <uicorner CornerRadius={new UDim(1, 0)} />
                 </textlabel>
-            </imagebutton>
+            </frame>
         </frame>
     );
 };

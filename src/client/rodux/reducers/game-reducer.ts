@@ -1,4 +1,5 @@
 import Llama from "@rbxts/llama";
+import Roact from "@rbxts/roact";
 import Rodux from "@rbxts/rodux";
 import { Scene } from "types/enum/scene";
 import { IHotbarItemInStore } from "types/interfaces/hotbar-types";
@@ -14,7 +15,7 @@ export interface IGameReducer {
     };
 }
 
-const items: IHotbarItemInStore[] = new Array(9, "").map((_, i) => {
+const items: IHotbarItemInStore[] = new Array(2, "").map((_, i) => {
     return {
         id: tostring(i),
         imageId: "1235453245",
@@ -25,7 +26,7 @@ const InitialState: IGameReducer = {
     openScene: Scene.World,
 
     hotbar: {
-        selectedItem: items[2].id,
+        selectedItem: Roact.None,
         items,
     },
 };
