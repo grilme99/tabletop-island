@@ -2,6 +2,7 @@ import { SingleMotor, Spring } from "@rbxts/flipper";
 import { useFlipper } from "@rbxts/hook-bag";
 import Roact from "@rbxts/roact";
 import Hooks from "@rbxts/roact-hooks";
+import { ObjectViewport } from "shared/ui/components/viewport/object-viewport";
 import Theme from "shared/ui/theme";
 import { IHotbarItemInStore } from "types/interfaces/hotbar-types";
 
@@ -29,6 +30,9 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
             }),
         );
     }, [selected, transitionMotor]);
+
+    const instance = new Instance("Part");
+    instance.Color = new Color3(0, 1, 1);
 
     return (
         <frame Key={meta.id} Size={UDim2.fromScale(0, 1)} BackgroundTransparency={1}>
@@ -80,6 +84,21 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
                 >
                     <uicorner CornerRadius={new UDim(1, 0)} />
                 </textlabel>
+
+                {/* Item viewport */}
+                <ObjectViewport
+                    nativeProps={{
+                        AnchorPoint: new Vector2(0.5, 0.5),
+                        Position: UDim2.fromScale(0.5, 0.5),
+                        Size: UDim2.fromScale(0.8, 0.8),
+                        BackgroundTransparency: 1,
+
+                        Ambient: Color3.fromRGB(117, 138, 163),
+                        LightColor: Color3.fromRGB(228, 235, 160),
+                    }}
+                    instance={instance}
+                    extraCameraDepth={1}
+                />
             </frame>
         </frame>
     );
