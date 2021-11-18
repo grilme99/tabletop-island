@@ -139,8 +139,8 @@ deployments:
             - start
             - assetId
         fileHash:
-          value: d647873b7d0334e886c9471a7944db7a26351d309df0717b65eb665f31953eac
+          value: 00ab0201bf42447c4e9755ad67844bff07ba31213a3643200fd912a7114146c7
         filePath:
           value: game.rbxlx
       outputs:
-        version: 3
+        version: 4

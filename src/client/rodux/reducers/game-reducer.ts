@@ -15,7 +15,7 @@ export interface IGameReducer {
     };
 }
 
-const items: IHotbarItemInStore[] = new Array(2, "").map((_, i) => {
+const items: IHotbarItemInStore[] = new Array(3, "").map((_, i) => {
     return {
         id: tostring(i),
         imageId: "1235453245",
