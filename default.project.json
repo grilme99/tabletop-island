@@ -25,6 +25,9 @@
 			},
 			"TS": {
 				"$path": "out/shared"
+			},
+			"Assets": {
+				"$path": "assets/replicated-storage"
 			}
 		},
 		"StarterPlayer": {

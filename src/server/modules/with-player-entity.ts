@@ -1,7 +1,7 @@
 import { Dependency } from "@flamework/core";
 import Log from "@rbxts/log";
 import { PlayerService } from "server/services/player/player-service";
-import { IServerResponse } from "types/interfaces/network";
+import { IServerResponse } from "types/interfaces/network-types";
 import PlayerEntity from "./classes/player-entity";
 
 let playerService: PlayerService;

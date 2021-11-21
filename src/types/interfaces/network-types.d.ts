@@ -1,6 +1,6 @@
 interface IServerResponseOk<T> {
     success: true;
-    data: T;
+    data?: T;
 }
 
 interface IServerResponseBad {

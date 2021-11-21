@@ -43,6 +43,7 @@
 		"import/prefer-default-export": "off",
 		"no-param-reassign": "off",
 		"one-var": "off",
+		"no-underscore-dangle": "off",
 		"prettier/prettier": [
 			"warn",
 			{

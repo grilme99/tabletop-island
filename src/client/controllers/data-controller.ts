@@ -19,7 +19,7 @@ export default class DataController implements OnStart {
             if (!res.success)
                 return Log.Error("Could not get initial player data from server because:\n{@Reason}", res.error);
 
-            this.onGotNewData(res.data);
+            this.onGotNewData(res.data!);
         });
     }
 

@@ -8,7 +8,7 @@ import PlayerEntity from "server/modules/classes/player-entity";
 import { IPlayerData } from "shared/meta/default-player-data";
 import { isFlameworkService } from "shared/util/flamework-utils";
 import KickCode from "types/enum/kick-reason";
-import { IServerResponse } from "types/interfaces/network";
+import { IServerResponse } from "types/interfaces/network-types";
 import PlayerDataService from "./player-data-service";
 import PlayerRemovalService from "./player-removal-service";
 
