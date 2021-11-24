@@ -11,5 +11,11 @@ Log.SetLogger(
         .Create(),
 );
 
-Flamework.addPaths("src/client/controllers", "src/client/components", "src/client/apps", "src/client/interactions");
+Flamework.addPaths(
+    "src/client/controllers",
+    "src/client/components",
+    "src/client/apps",
+    "src/client/interactions",
+    "src/client/minigames",
+);
 Flamework.ignite();
