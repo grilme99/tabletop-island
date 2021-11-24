@@ -7,7 +7,7 @@ import { attachSetToTag } from "shared/util/tag-utils";
 import { CollisionGroup } from "types/enum/collision-groups";
 import { Tag } from "types/enum/tags";
 import { DecoratorMetadata } from "types/interfaces/flamework";
-import CharacterController from "../character-controller";
+import CharacterController from "../character/character-controller";
 import { IInteractionConfig, Interaction, OnInteracted } from "./interactions-decorator";
 
 type Ctor = OnInteracted;
