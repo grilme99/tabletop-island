@@ -1,3 +1,5 @@
+import Oklab from "shared/modules/oklab";
+
 export namespace ColorUtil {
     export function hexColor(decimal: number) {
         return Color3.fromRGB(
@@ -17,5 +19,12 @@ export namespace ColorUtil {
 
     export function brighten(color: Color3, ratio: number): Color3 {
         return new Color3(ratio + (1 - ratio) * color.R, ratio + (1 - ratio) * color.G, ratio + (1 - ratio) * color.B);
+    }
+
+    /** Lerps two Color3s with Oklab */
+    export function lerp(from: Color3, to: Color3, alpha: number) {
+        const fromLab = Oklab.to(from);
+        const toLab = Oklab.to(to);
+        return Oklab.from(fromLab.Lerp(toLab, alpha), false);
     }
 }

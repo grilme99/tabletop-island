@@ -4,6 +4,7 @@ import Roact from "@rbxts/roact";
 import Hooks from "@rbxts/roact-hooks";
 import { ObjectViewport } from "shared/ui/components/viewport/object-viewport";
 import Theme from "shared/ui/theme";
+import { ColorUtil } from "shared/util/color-utils";
 import { IHotbarItemInStore } from "types/interfaces/hotbar-types";
 
 interface IProps {
@@ -65,7 +66,7 @@ const InnerHotbarItem: Hooks.FC<IProps> = ({ meta, selected, index, onSelected }
 
                 {/* Selected ring */}
                 <uistroke
-                    Color={transitionRatio.map((ratio) => Theme.gray300.Lerp(Theme.primaryColor, ratio))}
+                    Color={transitionRatio.map((ratio) => ColorUtil.lerp(Theme.gray300, Theme.primaryColor, ratio))}
                     Thickness={3}
                 />
 
