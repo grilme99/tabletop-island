@@ -1,17 +1,27 @@
+/* eslint-disable max-classes-per-file */
 import { Controller, OnStart, OnInit, Flamework, Reflect } from "@flamework/core";
+import { Constructor } from "@flamework/core/out/types";
 import Log from "@rbxts/log";
+import { ClientStore } from "client/rodux/rodux";
+import { IMinigameArea } from "shared/meta/minigame-meta";
+import { MinigameId } from "types/enum/minigame";
 import { DecoratorMetadata } from "types/interfaces/flamework";
 import { IMinigameConfig, Minigame, OnMinigameEnd, OnMinigameStart } from "./minigame-decorator";
 
 type Ctor = OnMinigameStart & OnMinigameEnd;
 
 interface IMinigameInfo {
-    ctor: Ctor;
+    ctor: Constructor<BaseMinigame> & Ctor;
     config: IMinigameConfig;
     identifier: string;
 }
 
 const decoratorKey = `flamework:decorators.${Flamework.id<typeof Minigame>()}`;
+
+export class BaseMinigame {
+    /** The minigame model that this handler is currently attached to. */
+    public minigameArea!: IMinigameArea;
+}
 
 @Controller({})
 export default class MinigameController implements OnStart, OnInit {
@@ -25,6 +35,11 @@ export default class MinigameController implements OnStart, OnInit {
 
     /** @hidden */
     public onStart(): void {}
+
+    /** Sets the currently active minigame in the Rodux store and updates minigame handlers */
+    public setCurrentMinigame(newMinigame: MinigameId | undefined) {
+        ClientStore.dispatch({ type: "SetCurrentMinigame", newMinigame });
+    }
 
     /** Use Flamework Reflection API to register all classes decorated as a minigame. */
     private registerMinigameHandlers() {
@@ -42,8 +57,14 @@ export default class MinigameController implements OnStart, OnInit {
                 continue;
             }
 
-            this.registeredMinigames.set(identifier, { ctor, config, identifier });
+            this.registeredMinigames.set(identifier, {
+                ctor: ctor as Constructor<BaseMinigame> & Ctor,
+                config,
+                identifier,
+            });
             Log.ForScript().Verbose("Registered minigame class {Identifier}", identifier);
         }
     }
+
+    private setupMinigameHandler() {}
 }

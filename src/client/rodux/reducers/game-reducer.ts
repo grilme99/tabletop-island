@@ -1,9 +1,11 @@
 import Llama from "@rbxts/llama";
 import Roact from "@rbxts/roact";
 import Rodux from "@rbxts/rodux";
+import { MinigameId } from "types/enum/minigame";
 import { Scene } from "types/enum/scene";
 import { IHotbarItemInStore } from "types/interfaces/hotbar-types";
 import { ActionAddItemToHotbar, ActionRemoveItemFromHotbar, ActionSelectHotbarItem } from "../actions/hotbar-actions";
+import { ActionSetCurrentMinigame } from "../actions/minigame-actions";
 import { ActionSetScene } from "../actions/scene-actions";
 
 export interface IGameReducer {
@@ -12,6 +14,10 @@ export interface IGameReducer {
     hotbar: {
         selectedItem: string | undefined;
         items: IHotbarItemInStore[];
+    };
+
+    minigame: {
+        currentMinigame: MinigameId | undefined;
     };
 }
 
@@ -29,9 +35,22 @@ const InitialState: IGameReducer = {
         selectedItem: Roact.None,
         items,
     },
+
+    minigame: {
+        currentMinigame: Roact.None,
+    },
 };
 
-export type GameActions = ActionSetScene | ActionAddItemToHotbar | ActionRemoveItemFromHotbar | ActionSelectHotbarItem;
+export type GameActions =
+    | ActionSetScene
+
+    // Hotbar actions
+    | ActionAddItemToHotbar
+    | ActionRemoveItemFromHotbar
+    | ActionSelectHotbarItem
+
+    // Minigame actions
+    | ActionSetCurrentMinigame;
 
 export const gameReducer = Rodux.createReducer<IGameReducer, GameActions>(InitialState, {
     SetScene: (state, action) => {
@@ -70,6 +89,15 @@ export const gameReducer = Rodux.createReducer<IGameReducer, GameActions>(Initia
         return Llama.Dictionary.mergeDeep(state, {
             hotbar: {
                 selectedItem: itemId,
+            },
+        });
+    },
+
+    // Minigame actions
+    SetCurrentMinigame: (state, { newMinigame }) => {
+        return Llama.Dictionary.mergeDeep(state, {
+            minigame: {
+                minigameId: newMinigame,
             },
         });
     },
