@@ -30,6 +30,10 @@
 				"$path": "assets/replicated-storage"
 			}
 		},
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"$path": "assets/server-storage"
+		},
 		"StarterPlayer": {
 			"$className": "StarterPlayer",
 			"StarterPlayerScripts": {
