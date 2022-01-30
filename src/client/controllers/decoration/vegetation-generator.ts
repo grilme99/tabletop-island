@@ -78,7 +78,7 @@ function computeChunk(chunkPosition: Vector3, points: Array<CFrame>, pointsOctre
 }
 
 function generateStringOutput(points: Array<CFrame>) {
-    const template = `const points = [%s];\n\nexport = points`;
+    const template = `const VEGETATION_POINTS = [%s];\n\nexport = VEGETATION_POINTS`;
     let pointsStr = "";
 
     for (const point of points) {

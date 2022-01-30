@@ -1,17 +1,14 @@
-import { Controller, OnStart, OnInit, OnRender, OnTick } from "@flamework/core";
+import { Controller, OnStart, OnInit, OnRender } from "@flamework/core";
+import Log from "@rbxts/log";
 import Octree from "@rbxts/octree";
-import { ReplicatedStorage, Workspace } from "@rbxts/services";
-import { t } from "@rbxts/t";
+import { ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
 import { ColorUtil } from "shared/util/color-utils";
-import { attachSetToTag } from "shared/util/tag-utils";
-import { Tag } from "types/enum/tags";
+import VEGETATION_POINTS from "./vegetation-points";
 
 const FALLBACK_WIND_DIRECTION = new Vector3(10, 0, 5);
 const VEGETATION_INSTANCES = [ReplicatedStorage.Assets.Decorations.TallGrass];
 const BRIGHTEST_COLOR = Color3.fromRGB(104, 143, 92);
 const DARKEST_COLOR = Color3.fromRGB(89, 122, 79);
-
-const VEGETATION_RADIUS = 120;
 
 const raycastParams = new RaycastParams();
 raycastParams.FilterDescendantsInstances = [Workspace.Terrain];
@@ -32,9 +29,7 @@ interface IVegetationPoint {
 /** Handles rendering custom terrain vegetation in a performant manner. */
 @Controller({})
 export default class VegetationController implements OnStart, OnInit, OnRender {
-    private vegetationAreas = new Set<BasePart>();
     private vegetationOctree = new Octree<IVegetationPoint>();
-
     private rng = new Random();
 
     /** @hidden */
@@ -42,11 +37,31 @@ export default class VegetationController implements OnStart, OnInit, OnRender {
 
     /** @hidden */
     public onStart(): void {
-        // const onAdded = attachSetToTag(this.vegetationAreas, Tag.VegetationRegion, t.instanceIsA("BasePart"));
-        // onAdded.Connect((area) => this.computeVegetationPoints(area));
-        // while (wait(1)) {
-        //     this.computeVegetationPoints(camera.CFrame);
-        // }
+        this.handleVegetationPoints();
+    }
+
+    /** Slowly inserts all of the vegetation points into the octree. */
+    private async handleVegetationPoints() {
+        const pointCount = VEGETATION_POINTS.size();
+        Log.Debug("Adding {Count} vegetation points", pointCount);
+
+        const interval = 10;
+        for (let i = 0; i < pointCount + interval; i += interval) {
+            for (let n = 0; n < interval; n++) {
+                const point = VEGETATION_POINTS[i + n];
+                if (!point) continue;
+
+                this.vegetationOctree.CreateNode(point.Position, {
+                    template: this.pickVegetationObj(),
+                    origin: point,
+                    seed: this.rng.NextNumber(0, 100),
+                });
+            }
+
+            RunService.Heartbeat.Wait();
+        }
+
+        Log.Debug("Finished adding vegetation points");
     }
 
     private pickVegetationObj() {
