@@ -6,7 +6,11 @@ interface Lighting {
 }
 
 interface ReplicatedStorage {
-	Assets: Folder;
+	Assets: Folder & {
+		Decorations: Folder & {
+			TallGrass: MeshPart;
+		};
+	};
 	TS: Folder & {
 		events: ModuleScript;
 		functions: ModuleScript;
@@ -16,6 +20,7 @@ interface ReplicatedStorage {
 		};
 		modules: Folder & {
 			draw: ModuleScript;
+			oklab: ModuleScript;
 		};
 		"shared-constants": ModuleScript;
 		"tabletop-island.storybook": ModuleScript;
@@ -38,6 +43,7 @@ interface ReplicatedStorage {
 			"color-utils": ModuleScript;
 			"core-call": ModuleScript;
 			"flamework-utils": ModuleScript;
+			"number-utils": ModuleScript;
 			"physics-utils": ModuleScript;
 			"random-utils": ModuleScript;
 			"story-utils": ModuleScript;
@@ -71,6 +77,12 @@ interface ServerScriptService {
 				"player-service": ModuleScript;
 			};
 		};
+	};
+}
+
+interface ServerStorage {
+	TagList: Folder & {
+		VegetationRegion: Configuration;
 	};
 }
 

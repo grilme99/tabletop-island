@@ -24,9 +24,13 @@ export function attachSetToTag<T extends Instance>(set: Set<T>, tag: string, ins
         onAdded.Fire(obj);
     }
 
-    CollectionService.GetTagged(tag).forEach(handleInstance);
-    CollectionService.GetInstanceAddedSignal(tag).Connect(handleInstance);
-    CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => set.delete(instance as T));
+    // This is required so that `onAdded` can be returned and connected to
+    // before anything is added into the set.
+    task.defer(() => {
+        CollectionService.GetTagged(tag).forEach(handleInstance);
+        CollectionService.GetInstanceAddedSignal(tag).Connect(handleInstance);
+        CollectionService.GetInstanceRemovedSignal(tag).Connect((instance) => set.delete(instance as T));
+    });
 
     return onAdded;
 }

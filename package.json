@@ -26,7 +26,7 @@
   "license": "ISC",
   "devDependencies": {
     "@rbxts/compiler-types": "^1.1.1-types.3",
-    "@rbxts/types": "^1.0.551",
+    "@rbxts/types": "^1.0.571",
     "@typescript-eslint/eslint-plugin": "^4.26.1",
     "@typescript-eslint/parser": "^4.26.1",
     "concurrently": "^6.2.0",
@@ -66,6 +66,7 @@
     "@rbxts/maid": "^1.0.0-ts.1",
     "@rbxts/make": "^1.0.5",
     "@rbxts/object-utils": "^1.0.4",
+    "@rbxts/octree": "^1.0.1",
     "@rbxts/profileservice": "^1.3.0",
     "@rbxts/roact": "^1.4.0-ts.2",
     "@rbxts/roact-hooks": "^0.3.0-ts.2",
@@ -76,6 +77,7 @@
     "@rbxts/string-utils": "^1.0.2",
     "@rbxts/t": "^2.1.5",
     "@rbxts/testez": "^0.3.1-ts.6",
+    "@rbxts/visualize": "^1.1.1",
     "@rbxts/yield-for-character": "^1.2.0",
     "rbxts-transform-debug": "^1.0.0-rc.1",
     "rbxts-transform-env": "^1.0.0-rc.0"
