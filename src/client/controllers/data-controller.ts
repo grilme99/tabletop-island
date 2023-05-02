@@ -5,7 +5,7 @@ import { ClientStore } from "client/rodux/rodux";
 import { IPlayerData } from "shared/meta/default-player-data";
 
 /**
- * Controller than handles receiving player data updates from the server. Also
+ * Controller that handles receiving player data updates from the server. Also
  * requests the players data on load.
  */
 @Controller({})
